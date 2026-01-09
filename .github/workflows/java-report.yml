@@ -1,56 +1,60 @@
-name: Java Report
+name: Java Report for BankApplication
 
 on:
   push:
   pull_request:
 
 jobs:
-  analyze-java:
+  java-report:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Count Java files
-        id: count_java
+      - name: Scan Java files and generate report
+        shell: bash
         run: |
-          JAVA_FILES=$(find . -name "*.java")
-          if [ -z "$JAVA_FILES" ]; then
-            echo "No .java files found"
+          set -euo pipefail
+
+          REPORT="java-file-report.txt"
+
+          # Find all .java files
+          mapfile -t JAVA_FILES < <(find . -type f -name "*.java")
+
+          # Fail if no .java files
+          if [ "${#JAVA_FILES[@]}" -eq 0 ]; then
+            echo "ERROR: No .java files found."
             exit 1
           fi
 
-          echo "$JAVA_FILES" > java_files.txt
-          COUNT=$(echo "$JAVA_FILES" | wc -l)
-          echo "java_count=$COUNT" >> $GITHUB_OUTPUT
-
-      - name: Check for .class files (bad practice)
-        run: |
-          CLASS_FILES=$(find . -name "*.class")
-          if [ ! -z "$CLASS_FILES" ]; then
-            echo ".class files detected in the repo:"
-            echo "$CLASS_FILES"
+          # Fail if any .class files exist
+          if find . -type f -name "*.class" | grep -q .; then
+            echo "ERROR: Compiled *.class files are committed (bad practice)."
             exit 1
           fi
 
-      - name: Generate java-file-report.txt
-        run: |
-          echo "Number of .java files: ${{ steps.count_java.outputs.java_count }}" > java-file-report.txt
-          echo "" >> java-file-report.txt
-          echo "Per-file breakdown:" >> java-file-report.txt
+          TOTAL_LINES=0
 
-          TOTAL=0
-          while read FILE; do
-            LINES=$(wc -l < "$FILE")
-            echo "$FILE – $LINES lines" >> java-file-report.txt
-            TOTAL=$((TOTAL + LINES))
-          done < java_files.txt
+          echo "Java File Report" > "$REPORT"
+          echo "================" >> "$REPORT"
+          echo "" >> "$REPORT"
+          echo "Per-file breakdown:" >> "$REPORT"
 
-          echo "" >> java-file-report.txt
-          echo "Total lines of code: $TOTAL" >> java-file-report.txt
+          for file in "${JAVA_FILES[@]}"; do
+            LINE_COUNT=$(wc -l < "$file")
+            TOTAL_LINES=$((TOTAL_LINES + LINE_COUNT))
+            echo "${file#./} – ${LINE_COUNT}" >> "$REPORT"
+          done
 
-      - name: Upload report artifact
+          echo "" >> "$REPORT"
+          echo "Summary:" >> "$REPORT"
+          echo "Number of .java files: ${#JAVA_FILES[@]}" >> "$REPORT"
+          echo "Total lines of code: $TOTAL_LINES" >> "$REPORT"
+
+          echo "java-file-report.txt generated"
+
+      - name: Upload java-file-report.txt
         uses: actions/upload-artifact@v4
         with:
           name: java-file-report
