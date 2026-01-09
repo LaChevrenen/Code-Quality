@@ -2,44 +2,100 @@
 _Repo 1: jay-bank_
 
 ## Objective  
-Analyser la complexité cyclomatique d’une méthode non triviale dans `BankAccount` (ex: `deposit`, `withdraw`, etc.).
+Analyser la complexité cyclomatique d’une méthode non triviale dans `BankAccount` (ex: `depositMoney`, `withdrawMoney`, etc.).
 
 ---
 
 ## Selected Method
 
-- **Method name:**  
-- **Cyclomatic Complexity (from CK Metrics):**  
-- **WMC (Weighted Methods per Class):**  
+- **Method name:** `withdrawMoney`
+- **Cyclomatic Complexity:** 33  
+- **WMC (Weighted Methods per Class):** 20
 
 ---
 
-## 📝 Decision Points (to annotate in the Java file)
+## Decision Points (annotated in the method)
 
-Dans le fichier `BankAccount.java`, ajouter des commentaires `// decision point` sur chaque :
-
-- `if`
-- `else if`
-- `else`
-- `switch`
-- `case`
-- `for`
-- `while`
-- `do`
-- `catch`
-- toute autre structure de branchement
-
-👉 **Copie ici les extraits de code annotés ou une liste des lignes concernées :**
+Méthode originale annotée :
 
 ```java
-// Exemple (à remplacer par ton code réel)
-public void withdraw(double amount) {
-    if (amount <= 0) { // decision point
-        ...
+public boolean withdrawMoney(double withdrawAmount) {
+    if ( // decision point 1
+        withdrawAmount >= (double)0.0F 
+        && this.balance >= withdrawAmount 
+        && withdrawAmount < this.withdrawLimit 
+        && withdrawAmount + this.amountWithdrawn <= this.withdrawLimit
+    ) {
+        this.balance -= withdrawAmount;
+        this.success = true;
+        this.amountWithdrawn += withdrawAmount;
+    } else { // decision point 2
+        this.success = false;
     }
-    if (balance >= amount) { // decision point
-        ...
-    } else { // decision point
-        ...
-    }
+
+    return this.success;
 }
+```
+### Nombre de points de décision identifiés :
+- **if → 1**  
+- **else → 1**
+
+**Total visible : 2 decision points**  
+**Complexité cyclomatique mesurée : 5**
+
+---
+
+### Refactoring Proposal (3–5 sentences)
+
+La méthode `withdrawMoney` regroupe plusieurs règles métier dans une seule condition complexe, ce qui nuit à la lisibilité et augmente fortement la complexité cyclomatique.  
+Un bon refactoring serait d’extraire chaque vérification dans une méthode dédiée, par exemple : `isPositiveAmount()`, `hasSufficientBalance()`, `isUnderWithdrawLimit()`...  
+Ensuite, une méthode comme `canWithdraw(withdrawAmount)` pourrait centraliser ces validations et simplifier le `if` principal. Tout cela réduirait significativement sa complexité.
+
+---
+
+### Bonus (optional)
+
+Pour le bonus, j’ai appliqué le refactoring proposé en extrayant les vérifications dans des méthodes dédiées.  
+La méthode `withdrawMoney` devient plus courte et plus lisible, tandis que la logique métier est répartie.
+
+Exemple de refactoring :
+
+```java
+private boolean isPositiveAmount(double amount) { // decision point
+    return amount >= 0.0;
+}
+
+private boolean hasSufficientBalance(double amount) { // decision point
+    return this.balance >= amount;
+}
+
+private boolean isUnderWithdrawLimit(double amount) { // decision point
+    return amount < this.withdrawLimit;
+}
+
+private boolean respectsDailyLimit(double amount) { // decision point
+    return amount + this.amountWithdrawn <= this.withdrawLimit;
+}
+
+private boolean canWithdraw(double amount) { // decision point
+    return isPositiveAmount(amount)
+        && hasSufficientBalance(amount)
+        && isUnderWithdrawLimit(amount)
+        && respectsDailyLimit(amount);
+}
+
+public boolean withdrawMoney(double withdrawAmount) {
+    if (canWithdraw(withdrawAmount)) { // decision point
+        this.balance -= withdrawAmount;
+        this.amountWithdrawn += withdrawAmount;
+        return true;
+    }
+    return false;
+}
+```
+### Conclusion sur la complexité après refactoring
+
+Après refactoring, la méthode `withdrawMoney` voit sa complexité cyclomatique passer de **5 à 2**.  
+Cette réduction est due au déplacement des différentes règles métier dans des méthodes dédiées.  
+La logique est désormais mieux répartie, plus lisible et plus facile à tester.  
+Même si la complexité totale de la classe augmente légèrement, la complexité locale de `withdrawMoney` est nettement réduite, ce qui améliore la maintenabilité du code.
