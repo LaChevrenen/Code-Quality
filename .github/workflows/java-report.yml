@@ -16,19 +16,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           REPORT="java-file-report.txt"
-
-          # Find all .java files
           mapfile -t JAVA_FILES < <(find . -type f -name "*.java")
-
-          # Fail if no .java files
+          
           if [ "${#JAVA_FILES[@]}" -eq 0 ]; then
             echo "ERROR: No .java files found."
             exit 1
           fi
 
-          # Fail if any .class files exist
           if find . -type f -name "*.class" | grep -q .; then
             echo "ERROR: Compiled *.class files are committed (bad practice)."
             exit 1
