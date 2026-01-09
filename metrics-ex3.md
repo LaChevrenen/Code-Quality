@@ -24,6 +24,16 @@ _Repo 1: jay-bank_
 
 ### **3. Considering WMC + CBO + LCOM together, which class is the most worrying for future maintenance, and why?**
 
+###  Comparatif cumulé des métriques WMC + CBO + LCOM
+
+| Classe          | WMC | CBO | LCOM | Total (WMC + CBO + LCOM) |
+|-----------------|-----|-----|------|---------------------------|
+| **Bank**        | 14  | 4   | 0    | **18**                    |
+| **BankAccount** | 20  | 3   | 44   | **67**                    |
+| **Person**      | 23  | 3   | 79   | **105**                   |
+
+---
+
 **Person** est la classe la plus préoccupante :  
 - Elle possède le **WMC le plus élevé (23)** → beaucoup de méthodes, complexité importante  
 - Elle présente un **LCOM très élevé (79)** → cohésion extrêmement faible, les méthodes ne travaillent pas ensemble  
