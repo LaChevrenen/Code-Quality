@@ -10,14 +10,14 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Count Java files
         id: count_java
         run: |
           JAVA_FILES=$(find . -name "*.java")
           if [ -z "$JAVA_FILES" ]; then
-            echo "❌ No .java files found"
+            echo "No .java files found"
             exit 1
           fi
 
@@ -29,7 +29,7 @@ jobs:
         run: |
           CLASS_FILES=$(find . -name "*.class")
           if [ ! -z "$CLASS_FILES" ]; then
-            echo "❌ .class files detected in the repo:"
+            echo ".class files detected in the repo:"
             echo "$CLASS_FILES"
             exit 1
           fi
@@ -51,7 +51,7 @@ jobs:
           echo "Total lines of code: $TOTAL" >> java-file-report.txt
 
       - name: Upload report artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: java-file-report
           path: java-file-report.txt
