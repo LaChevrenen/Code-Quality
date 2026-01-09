@@ -1,0 +1,57 @@
+name: Java Report
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  analyze-java:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Count Java files
+        id: count_java
+        run: |
+          JAVA_FILES=$(find . -name "*.java")
+          if [ -z "$JAVA_FILES" ]; then
+            echo "❌ No .java files found"
+            exit 1
+          fi
+
+          echo "$JAVA_FILES" > java_files.txt
+          COUNT=$(echo "$JAVA_FILES" | wc -l)
+          echo "java_count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Check for .class files (bad practice)
+        run: |
+          CLASS_FILES=$(find . -name "*.class")
+          if [ ! -z "$CLASS_FILES" ]; then
+            echo "❌ .class files detected in the repo:"
+            echo "$CLASS_FILES"
+            exit 1
+          fi
+
+      - name: Generate java-file-report.txt
+        run: |
+          echo "Number of .java files: ${{ steps.count_java.outputs.java_count }}" > java-file-report.txt
+          echo "" >> java-file-report.txt
+          echo "Per-file breakdown:" >> java-file-report.txt
+
+          TOTAL=0
+          while read FILE; do
+            LINES=$(wc -l < "$FILE")
+            echo "$FILE – $LINES lines" >> java-file-report.txt
+            TOTAL=$((TOTAL + LINES))
+          done < java_files.txt
+
+          echo "" >> java-file-report.txt
+          echo "Total lines of code: $TOTAL" >> java-file-report.txt
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-file-report
+          path: java-file-report.txt
