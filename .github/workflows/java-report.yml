@@ -65,12 +65,14 @@ jobs:
 
       - name: Run mvn clean test
         run: mvn clean test
+        working-directory: ./bank-application
 
       - name: Run mvn package
         run: mvn package
+        working-directory: ./bank-application
 
       - name: Upload target folder
         uses: actions/upload-artifact@v4
         with:
           name: build-target
-          path: target/
+          path: bank-application/target/
