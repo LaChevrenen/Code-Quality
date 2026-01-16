@@ -9,7 +9,7 @@ Analyser la complexité cyclomatique d’une méthode non triviale dans `BankAcc
 ## Selected Method
 
 - **Method name:** `withdrawMoney`
-- **Cyclomatic Complexity:** 33  
+- **Cyclomatic Complexity(of the file)** 33  
 - **WMC (Weighted Methods per Class):** 20
 
 ---

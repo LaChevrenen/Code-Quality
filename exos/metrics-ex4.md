@@ -29,7 +29,7 @@ _Repo 1: jay-bank_
 
 ##  Vérification après analyse
 
-Après avoir relancé SonarLint sur le projet :
+Après avoir relancé SonarLint sur le projet (même scope):
 
 - Les deux problèmes corrigés **ont disparu** de la liste des issues.  
 - La méthode complexe dans `BankAccountApp.java` reste signalée, car elle nécessite un refactoring plus conséquent.

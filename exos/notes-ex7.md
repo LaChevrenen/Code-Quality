@@ -1,9 +1,9 @@
 # Exercise 7 — Maven Lifecycle Exploration
 
 ## Ajout des dépendances de test
-Dans le `pom.xml`, j’ai ajouté JUnit 5 ainsi que le plugin Surefire pour exécuter les tests :
+Dans le `pom.xml`, j’ai ajouté JUnit 4 ainsi que le plugin Surefire pour exécuter les tests :
 
-- Dépendance : `org.junit.jupiter:junit-jupiter:5.10.0`
+- Dépendance : `junit:junit:4.13.2`
 - Scope : `test`
 - Plugin : `maven-surefire-plugin` (version 3.2.5)
 
