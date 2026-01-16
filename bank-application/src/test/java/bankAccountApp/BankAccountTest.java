@@ -1,12 +1,12 @@
 package bankAccountApp;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-class BankAccountTest {
+public class BankAccountTest {
 
     @Test
-    void depositMoney_happyPath() {
+    public void depositMoney_happyPath() {
         BankAccount acc = new BankAccount();
         acc.depositMoney(100.0);
 
@@ -14,7 +14,7 @@ class BankAccountTest {
     }
 
     @Test
-    void withdrawMoney_edgeCase_exceedsBalance() {
+    public void withdrawMoney_edgeCase_exceedsBalance() {
         BankAccount acc = new BankAccount();
         acc.depositMoney(50.0);
         acc.setWithdrawLimit(500.0);

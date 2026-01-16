@@ -1,8 +1,12 @@
-name: Java Report
+name: Java Report for BankApplication (Repo 1)
 
 on:
   push:
+    paths:
+      - 'BankApplication-master/**'
   pull_request:
+    paths:
+      - 'BankApplication-master/**'
 
 jobs:
   analyze-java:
@@ -14,6 +18,7 @@ jobs:
 
       - name: Scan for Java files
         id: scan
+        working-directory: ./BankApplication-master/BankApplication-master/jay-bank
         run: |
           JAVA_FILES=$(find . -type f -name "*.java")
           if [ -z "$JAVA_FILES" ]; then
@@ -26,6 +31,7 @@ jobs:
           echo "java_count=$COUNT" >> $GITHUB_OUTPUT
 
       - name: Fail if .class files exist
+        working-directory: ./BankApplication-master/BankApplication-master/jay-bank
         run: |
           CLASS_FILES=$(find . -type f -name "*.class")
           if [ ! -z "$CLASS_FILES" ]; then
@@ -35,6 +41,7 @@ jobs:
           fi
 
       - name: Generate java-file-report.txt
+        working-directory: ./BankApplication-master/BankApplication-master/jay-bank
         run: |
           echo "Number of .java files: ${{ steps.scan.outputs.java_count }}" > java-file-report.txt
           echo "" >> java-file-report.txt
@@ -55,24 +62,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-report
-          path: java-file-report.txt
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Run mvn clean test
-        run: mvn clean test
-        working-directory: ./bank-application
-
-      - name: Run mvn package
-        run: mvn package
-        working-directory: ./bank-application
-
-      - name: Upload target folder
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-target
-          path: bank-application/target/
+          path: BankApplication-master/BankApplication-master/jay-bank/java-file-report.txt

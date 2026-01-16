@@ -1,12 +1,12 @@
 package bankAccountApp;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-class BankTest {
+public class BankTest {
 
     @Test
-    void getMaximumBalance_shouldReturnHighestBalance() {
+    public void getMaximumBalance_shouldReturnHighestBalance() {
         Bank bank = new Bank();
 
         BankAccount acc1 = new BankAccount();

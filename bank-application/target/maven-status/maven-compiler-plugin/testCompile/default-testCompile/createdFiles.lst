@@ -1,2 +1,4 @@
-bankAccountApp\BankTest.class
 bankAccountApp\BankAccountTest.class
+com\imt\mines\bank\bdd\BankAccountBasicSteps.class
+bankAccountApp\BankTest.class
+com\imt\mines\bank\bdd\RunBankAccountCucumberTest.class
