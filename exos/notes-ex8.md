@@ -47,7 +47,7 @@ Tests exécutés via mvn test avec JUnit 5.
 
 Tous les tests ont été validés avec succès.
 
-Le "build" est propre
+Le build est propre.
 
 ## Conclusion
 La logique métier principale de la classe BankAccount est désormais couverte par des tests unitaires

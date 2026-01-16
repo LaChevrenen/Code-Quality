@@ -102,8 +102,8 @@ Voici le screenshot montrant que `mvn test` exécute bien le scénario Cucumber 
 **Skipped: 0**  
 
 Le scénario Cucumber "A new account has zero balance" s'exécute correctement :
-- Given I have a new bank account ✓
-- When I check its balance ✓
-- Then the balance should be 0 ✓
+- Given I have a new bank account
+- When I check its balance
+- Then the balance should be 0
 
 **BUILD SUCCESS**
