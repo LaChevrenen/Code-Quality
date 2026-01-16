@@ -128,16 +128,37 @@ public class BankAccount {
 		}
 	}
 
+
+	private boolean isPositiveAmount(double amount) { // decision point
+		return amount >= 0.0;
+	}
+
+	private boolean hasSufficientBalance(double amount) { // decision point
+		return this.balance >= amount;
+	}
+
+	private boolean isUnderWithdrawLimit(double amount) { // decision point
+		return amount < this.withdrawLimit;
+	}
+
+	private boolean respectsDailyLimit(double amount) { // decision point
+		return amount + this.amountWithdrawn <= this.withdrawLimit;
+	}
+
+	private boolean canWithdraw(double amount) { // decision point
+		return isPositiveAmount(amount)
+			&& hasSufficientBalance(amount)
+			&& isUnderWithdrawLimit(amount)
+			&& respectsDailyLimit(amount);
+	}
+
 	public boolean withdrawMoney(double withdrawAmount) {
-		if (withdrawAmount >= 0 && balance >= withdrawAmount && withdrawAmount < withdrawLimit
-				&& withdrawAmount + amountWithdrawn <= withdrawLimit) {
-			balance = balance - withdrawAmount;
-			success = true;
-			amountWithdrawn += withdrawAmount;
-		} else {
-			success = false;
+		if (canWithdraw(withdrawAmount)) { // decision point
+			this.balance -= withdrawAmount;
+			this.amountWithdrawn += withdrawAmount;
+			return true;
 		}
-		return success;
+		return false;
 	}
 
 	public void setAccountNumber(int accNumber) {
